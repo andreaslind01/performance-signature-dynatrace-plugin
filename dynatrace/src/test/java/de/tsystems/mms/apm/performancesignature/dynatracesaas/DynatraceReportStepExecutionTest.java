@@ -57,7 +57,7 @@ public class DynatraceReportStepExecutionTest {
     @Test
     public void testTimeseriesApi() {
         TimeseriesDataPointQueryResult response = connection.getTimeseriesData("com.dynatrace.builtin:host.mem.used",
-                Instant.now().minus(2, HOURS).toEpochMilli(), Instant.now().toEpochMilli(), AggregationTypeEnum.AVG, null, null);
+                Instant.now().minus(2, HOURS).toEpochMilli(), Instant.now().toEpochMilli(), AggregationTypeEnum.AVG, null, null, null);
         assertNotNull(response);
         //MapUtils.debugPrint(System.out, "myMap", response.getDataPoints());
 
