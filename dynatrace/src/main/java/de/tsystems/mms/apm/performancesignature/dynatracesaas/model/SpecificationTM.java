@@ -25,6 +25,8 @@ public class SpecificationTM {
     private String timeseriesId;
     @SerializedName("aggregation")
     private AggregationTypeEnum aggregation;
+    @SerializedName("percentile")
+    private Integer percentile;
     @SerializedName("tags")
     private String tags;
     @SerializedName("entityIds")
@@ -40,9 +42,10 @@ public class SpecificationTM {
     public SpecificationTM() {
     }
 
-    public SpecificationTM(String timeseriesId, AggregationTypeEnum aggregation, String tags, String entityIds, Double lowerLimit, Double upperLimit) {
+    public SpecificationTM(String timeseriesId, AggregationTypeEnum aggregation, Integer percentile, String tags, String entityIds, Double lowerLimit, Double upperLimit) {
         this.timeseriesId = timeseriesId;
         this.aggregation = aggregation;
+        this.percentile = percentile;
         this.tags = tags;
         this.entityIds = entityIds;
         this.lowerLimit = lowerLimit;
@@ -68,6 +71,15 @@ public class SpecificationTM {
 
     public void setAggregation(AggregationTypeEnum aggregation) {
         this.aggregation = aggregation;
+    }
+    
+    public Integer getPercentile() {
+        if (percentile == null) return 98;
+        return percentile;
+    }
+    
+    public void setPercentile(Integer percentile) {
+        this.percentile = percentile;
     }
 
     public String getTags() {
@@ -104,6 +116,6 @@ public class SpecificationTM {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("timeseriesId", timeseriesId).append("aggregation", aggregation).append("tags", tags).append("entityIds", entityIds).append("lowerLimit", lowerLimit).append("upperLimit", upperLimit).toString();
+        return new ToStringBuilder(this).append("timeseriesId", timeseriesId).append("aggregation", aggregation).append("percentile", percentile).append("tags", tags).append("entityIds", entityIds).append("lowerLimit", lowerLimit).append("upperLimit", upperLimit).toString();
     }
 }

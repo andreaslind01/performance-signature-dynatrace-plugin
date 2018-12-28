@@ -106,17 +106,17 @@ public class DynatraceServerConnection {
     }
 
     public TimeseriesDataPointQueryResult getTotalTimeseriesData(String timeseriesId, Long startTimestamp, Long endTimestamp,
-                                                                 AggregationTypeEnum aggregationType, String entityIds, String tags) {
-        return getTimeseriesData(timeseriesId, startTimestamp, endTimestamp, aggregationType, QueryModeEnum.TOTAL, entityIds, tags);
+                                                                 AggregationTypeEnum aggregationType, Integer percentile, String entityIds, String tags) {
+        return getTimeseriesData(timeseriesId, startTimestamp, endTimestamp, aggregationType, percentile, QueryModeEnum.TOTAL, entityIds, tags);
     }
 
     public TimeseriesDataPointQueryResult getTimeseriesData(String timeseriesId, Long startTimestamp, Long endTimestamp,
-                                                            AggregationTypeEnum aggregationType, String entityIds, String tags) {
-        return getTimeseriesData(timeseriesId, startTimestamp, endTimestamp, aggregationType, QueryModeEnum.SERIES, entityIds, tags);
+                                                            AggregationTypeEnum aggregationType, Integer percentile, String entityIds, String tags) {
+        return getTimeseriesData(timeseriesId, startTimestamp, endTimestamp, aggregationType, percentile, QueryModeEnum.SERIES, entityIds, tags);
     }
 
     private TimeseriesDataPointQueryResult getTimeseriesData(String timeseriesId, Long startTimestamp, Long endTimestamp,
-                                                             AggregationTypeEnum aggregationType, QueryModeEnum queryMode, String entityIds, String tags) {
+                                                             AggregationTypeEnum aggregationType, Integer percentile, QueryModeEnum queryMode, String entityIds, String tags) {
         TimeseriesApi api = apiClient.createService(TimeseriesApi.class);
         TimeseriesQueryMessage body = new TimeseriesQueryMessage()
                 .timeseriesId(timeseriesId)
@@ -126,7 +126,10 @@ public class DynatraceServerConnection {
                 .queryMode(queryMode);
         if (StringUtils.isNotBlank(entityIds)) body.setEntities(Stream.of(entityIds.split(",")).map(String::trim).collect(Collectors.toList()));
         if (StringUtils.isNotBlank(tags)) body.setTags(Stream.of(tags.split(",")).map(String::trim).collect(Collectors.toList()));
-        if (aggregationType == AggregationTypeEnum.PERCENTILE) body.percentile(98);
+        if (aggregationType == AggregationTypeEnum.PERCENTILE) {
+            if (percentile == null) body.percentile(98);
+            else body.percentile(percentile);
+        }
 
         Call<TimeseriesDataPointQueryResult.Container> call = api.readTimeseriesComplex(body);
         try {
